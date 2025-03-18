@@ -1,0 +1,137 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+/* Global Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    background: linear-gradient(to bottom, #f8fbff, #eaf1f8);
+    margin: 0;
+    padding: 0;
+    min-height: 100dvh;
+    background-color: #3b82f680;
+}
+
+:root {
+    --tw-ring-color: #3b82f680;
+}
+
+
+/* Header */
+.header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    height: 64px; /* Equivalent to h-16 */
+    margin: 0 auto; /* Centers the header */
+    gap: 0.25rem; /* Equivalent to gap-1 */
+    padding-left: 24px; /* Equivalent to max-[1004px]:px-6 */
+    padding-right: 24px;
+    border-bottom: 1.5px solid #e5e7eb;
+}
+
+
+/* Logo */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 30px; /* Adjust based on actual logo size */
+    height: auto;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    background: #2C3345;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.highlight {
+    color: #006fee;
+    font-weight: 600;
+}
+
+/* Container - Adjust position */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligns content to the top */
+    height: auto; /* Remove full height to allow natural content flow */
+    padding-top: 20px; /* Adds spacing from the top */
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Card - Same background as body */
+.card {
+    background: linear-gradient(to bottom, #f8fbff, #eaf1f8); /* Matches body */
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 500px;
+    max-width: 90%;
+}
+
+/* Icon */
+.icon img {
+    width: 60px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+/* Heading */
+.test-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: black;
+    margin-top: 5px;
+    margin-bottom: 35px;
+}
+
+/* List - Center Text */
+.test-list {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+}
+
+/* List Items - Centered */
+.test-list li {
+    color: #3f3f46;
+    font-size: 18px;
+    font-weight: 300;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers text horizontally */
+    gap: 10px; /* Ensures spacing between checkmark and text */
+    line-height: 1.5;
+}
+
+/* Checkmark */
+.test-list li::before {
+    content: "✔";
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Button */
+.start-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 45px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 15px;
+}
+
+.start-btn:hover {
+    background: #0563c7;
+}

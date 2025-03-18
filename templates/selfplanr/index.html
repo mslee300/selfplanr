@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<header class="header">
+    <div class="logo-container">
+        <span class="logo-text">Selfplanr</span>
+    </div>
+</header>
+<div class="container">
+    <div class="card">
+        <div class="icon">
+            <img src="{% static 'selfplanr-logo.avif' %}" alt="IQ Test Icon">
+        </div>
+        <h2 class="test-title">Get ready to start the <span class="highlight">College test!</span></h2>
+        <ul class="test-list">
+            <li>You will get 5 in-depth questions about your stats.</li>
+            <li>Answer as thoroughly as possible for accurate results.</li>
+            <li>You can skip the question and return back later.</li>
+        </ul>
+        <button class="start-btn">Start College Test</button>
+    </div>
+</div>
+{% endblock %}
