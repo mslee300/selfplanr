@@ -3,21 +3,31 @@
 {% block content %}
 <header class="header">
     <div class="logo-container">
-        <span class="logo-text">Selfplanr</span>
+        <a href="/">
+            <span class="logo-text">Selfplanr</span>
+        </a>
     </div>
 </header>
 <div class="container">
     <div class="card">
-        <div class="icon">
-            <img src="{% static 'selfplanr-logo.avif' %}" alt="IQ Test Icon">
+        <div id="initial-content">
+            <div class="icon">
+                <img src="{% static 'selfplanr-logo.avif' %}" alt="IQ Test Icon">
+            </div>
+            <h2 class="test-title">See Your Real Chances at <span class="highlight">Top Colleges</span></h2>
+            <ul class="test-list">
+                <li>See your chances at Ivy League & top schools.</li>
+                <li>Uncover strengths & gaps in your application.</li>
+                <li>Get AI-powered tips to improve your odds.</li>
+            </ul>
+            <button id="start-btn" class="start-btn">Start Analysis</button>
         </div>
-        <h2 class="test-title">Get ready to start the <span class="highlight">College test!</span></h2>
-        <ul class="test-list">
-            <li>You will get 5 in-depth questions about your stats.</li>
-            <li>Answer as thoroughly as possible for accurate results.</li>
-            <li>You can skip the question and return back later.</li>
-        </ul>
-        <button class="start-btn">Start College Test</button>
+        <div id="form-content" class="hidden"></div>
+        <div id="nav-buttons" class="hidden">
+            <button id="prev-btn" class="nav-btn hidden">Previous</button>
+            <button id="next-btn" class="nav-btn" disabled>Next</button>
+        </div>
     </div>
 </div>
+<script src="{% static 'script.js' %}"></script>
 {% endblock %}

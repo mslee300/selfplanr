@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<header class="header">
+    <div class="logo-container">
+        <a href="/">
+            <span class="logo-text">Selfplanr</span>
+        </a>
+    </div>
+</header>
+<div class="container">
+    <div class="card">
+        <h2>Analyzing your <br><span style="color: #007bff;">college application profile...</span></h2>
+        <p class="loading-text">Hang tight while our AI analyzes your information...</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+            <span id="progress-percentage">0%</span>
+        </div>
+        <ul id="checklist">
+            <li class="checklist-item"><span class="check">✓</span> Academic Strengths</li>
+            <li class="checklist-item"><span class="check">✓</span> Course Rigor</li>
+            <li class="checklist-item"><span class="check">✓</span> Extracurriculars</li>
+            <li class="checklist-item"><span class="check">✓</span> College Fit</li>
+            <li class="checklist-item"><span class="check">✓</span> Admission Chances</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    h2 {
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    .loading-text {
+        text-align: left;
+        color: gray;
+    }
+    
+    .progress-container {
+        background-color: #f1f1f1;
+        border-radius: 20px;
+        margin: 30px 0;
+        height: 20px;
+        position: relative;
+    }
+
+    .progress-bar {
+        background-color: #007bff;
+        height: 100%;
+        border-radius: 20px;
+        width: 0%;
+        transition: width 0.5s;
+    }
+
+    #progress-percentage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #333;
+        font-weight: bold;
+    }
+
+    #checklist {
+        list-style-type: none;
+        padding: 0;
+        text-align: left;
+        margin-top: 30px;
+    }
+
+    .checklist-item {
+        margin: 10px 0;
+        opacity: 0.3;
+        transition: opacity 0.5s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .checklist-item.active {
+        opacity: 1;
+    }
+
+    .check {
+        display: inline-block;
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        font-size: 14px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the user data from sessionStorage
+        const userData = sessionStorage.getItem("userFormData");
+        let reportReady = false;
+
+        // Initialize all checklist items as inactive
+        let checklistItems = document.querySelectorAll('.checklist-item');
+        checklistItems.forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Start the visual progress animation immediately
+        startProgressAnimation();
+
+        if (userData) {
+            // Send the data to the backend to generate the report
+            fetch("/get_report/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: userData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Store the generated report in sessionStorage
+                sessionStorage.setItem("reportData", JSON.stringify(data.report));
+
+                // Mark that the report is ready
+                reportReady = true;
+
+                // Check if we should redirect now
+                checkAndRedirect();
+            })
+            .catch(error => {
+                console.error("Error generating report:", error);
+                // Still mark as ready in case of error, to avoid hanging
+                reportReady = true;
+                checkAndRedirect();
+            });
+        } else {
+            // No user data found, redirect back to index
+            window.location.href = "/";
+        }
+
+        // Function to check if we should redirect
+        function checkAndRedirect() {
+            const progress = parseFloat(document.getElementById('progress-bar').style.width);
+            if (reportReady && progress >= 100) {
+                // Both report is ready and animation is complete
+                window.location.href = "/report/";
+            } else if (reportReady) {
+                // Report is ready but animation is not complete
+                // Let's speed up the animation
+                speedUpProgressAnimation();
+            }
+        }
+    });
+
+    let progressInterval; // Store interval reference globally
+
+    function startProgressAnimation() {
+        // Set an initial minimum duration of animation (e.g., 10 seconds)
+        const minDuration = 10000; 
+        // Maximum duration (60 seconds)
+        const maxDuration = 60000;
+        const updateInterval = 500; // Update every 500ms
+
+        // Calculate steps and increment for min/max durations
+        const minSteps = minDuration / updateInterval;
+        const maxSteps = maxDuration / updateInterval;
+        const minIncrementPerStep = 100 / minSteps;
+        const maxIncrementPerStep = 100 / maxSteps;
+
+        // Start with the slower pace
+        let incrementPerStep = maxIncrementPerStep;
+
+        let progress = 0;
+        let currentCheckmark = 0;
+        const checklistItems = document.querySelectorAll('.checklist-item');
+        const checkmarkIntervals = [0.2, 0.4, 0.6, 0.8, 0.95]; // When to activate each checkmark
+
+        progressInterval = setInterval(() => {
+            progress += incrementPerStep;
+            progress = Math.min(progress, 99); // Stay at 99% until data is ready
+
+            // Update progress bar width and text
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-percentage').textContent = Math.round(progress) + '%';
+
+            // Activate checkmarks at specific intervals
+            for (let i = 0; i < checkmarkIntervals.length; i++) {
+                if (progress / 100 >= checkmarkIntervals[i] && i >= currentCheckmark) {
+                    checklistItems[i].classList.add('active');
+                    currentCheckmark = i + 1;
+                }
+            }
+        }, updateInterval);
+    }
+
+    function speedUpProgressAnimation() {
+        // Clear the existing interval
+        clearInterval(progressInterval);
+
+        // Set a faster interval to quickly reach 100%
+        const updateInterval = 100; // Update every 100ms
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = document.getElementById('progress-percentage');
+        const checklistItems = document.querySelectorAll('.checklist-item');
+
+        // Activate all remaining checkmarks
+        checklistItems.forEach(item => {
+            item.classList.add('active');
+        });
+
+        progressInterval = setInterval(() => {
+            const currentProgress = parseFloat(progressBar.style.width) || 0;
+            const newProgress = currentProgress + 1;
+
+            if (newProgress >= 100) {
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                progressPercentage.textContent = '100%';
+
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = "/report/";
+                }, 500);
+            } else {
+                progressBar.style.width = newProgress + '%';
+                progressPercentage.textContent = Math.round(newProgress) + '%';
+            }
+        }, updateInterval);
+    }
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

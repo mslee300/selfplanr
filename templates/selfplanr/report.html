@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<header class="header">
+    <div class="logo-container">
+        <a href="/">
+            <span class="logo-text">Selfplanr</span>
+        </a>
+    </div>
+</header>
+<div class="container">
+    <div class="card">
+        <h2>Smart Analysis Report</h2>
+        <div id="report-content" class="blurred">
+            <p>Loading report...</p>
+        </div>
+        <button id="view-full" class="start-btn">View Full Report →</button>
+    </div>
+</div>
+<br><br><br>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the saved report from sessionStorage
+        const reportData = sessionStorage.getItem("reportData");
+        
+        if (reportData) {
+            // Display the report
+            document.getElementById("report-content").innerHTML = reportData;
+            
+            // Keep the initial blur effect
+            const reportContent = document.getElementById("report-content");
+            const viewFullBtn = document.getElementById("view-full");
+            
+            viewFullBtn.addEventListener("click", function() {
+                reportContent.classList.remove("blurred");
+                viewFullBtn.style.display = "none";
+            });
+        } else {
+            // No report data found, show an error message
+            document.getElementById("report-content").innerHTML = 
+                "<p>Sorry, we couldn't generate your report. Please try again.</p>";
+            document.getElementById("report-content").classList.remove("blurred");
+            document.getElementById("view-full").style.display = "none";
+        }
+    });
+</script>
+
+<style>
+    .blurred {
+        filter: blur(5px);
+        max-height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    #report-content {
+        text-align: left;
+        padding: 15px;
+        line-height: 1.6;
+        transition: filter 0.5s ease;
+    }
+    
+    #view-full {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
